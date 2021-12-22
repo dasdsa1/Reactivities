@@ -34,6 +34,7 @@ namespace Application.Activities
 
             public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
             {
+                
                 var activity = await _context.Activities
                     .Include(a => a.Attendees).ThenInclude(u => u.AppUser)
                     .SingleOrDefaultAsync(x => x.Id == request.Id);
@@ -45,7 +46,7 @@ namespace Application.Activities
 
                 var hostUsername = activity.Attendees.FirstOrDefault(x => x.IsHost)?.AppUser?.UserName;
 
-                var attendance = activity.Attendees.FirstOrDefault(x => x.AppUser.UserName == hostUsername);
+                var attendance = activity.Attendees.FirstOrDefault(x => x.AppUser.UserName == user.UserName);
 
                 if (attendance != null && hostUsername == user.UserName)
                 {
@@ -65,7 +66,7 @@ namespace Application.Activities
 
                     activity.Attendees.Add(attendance);
                 }
-
+                
                 var result = await _context.SaveChangesAsync() > 0;
                 return result ? Result<Unit>.Success(Unit.Value) : Result<Unit>.Failure("Problem updating attendance");
 
