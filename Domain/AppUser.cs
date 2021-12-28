@@ -10,6 +10,8 @@ namespace Domain
 
         public ICollection<ActivityAttendee> Activities { get; set; }
 
+        public ICollection<Photo> Photos { get; set; }
+
     }
 
 }
